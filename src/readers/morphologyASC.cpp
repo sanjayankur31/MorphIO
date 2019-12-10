@@ -42,11 +42,12 @@ bool skip_sexp(size_t id) {
 class NeurolucidaParser
 {
   public:
-    explicit NeurolucidaParser(const std::string& uri)
+    explicit NeurolucidaParser(const std::string& uri, bool sanitize = true)
         : uri_(uri)
         , lex_(uri)
         , debugInfo_(uri)
-        , err_(uri) {}
+        , err_(uri)
+        , sanitize_(sanitize) {}
 
     NeurolucidaParser(NeurolucidaParser const&) = delete;
     NeurolucidaParser& operator=(NeurolucidaParser const&) = delete;
@@ -119,12 +120,13 @@ class NeurolucidaParser
             return_id = -1;
         } else {
             SectionType section_type = TokenSectionTypeMap.at(token);
-            insertLastPointParentSection(parent_id, properties);
+            if (sanitize_)
+                insertLastPointParentSection(parent_id, properties);
 
             // Condition to remove single point section that duplicate parent
             // point See test_single_point_section_duplicate_parent for an
             // example
-            if (parent_id > -1 && properties._points.size() == 1) {
+            if (sanitize_ && parent_id > -1 && properties._points.size() == 1) {
                 return_id = parent_id;
             } else {
                 std::shared_ptr<morphio::mut::Section> section;
@@ -255,13 +257,15 @@ class NeurolucidaParser
 
   private:
     ErrorMessages err_;
+    bool sanitize_;
 };
 
 Property::Properties load(const std::string& uri, unsigned int options) {
-    NeurolucidaParser parser(uri);
+    NeurolucidaParser parser(uri, !(options & NO_SANITIZE));
 
     morphio::mut::Morphology& nb_ = parser.parse();
-    nb_.sanitize(parser.debugInfo_);
+    if (!(options & NO_SANITIZE))
+        nb_.sanitize(parser.debugInfo_);
     nb_.applyModifiers(options);
 
     Property::Properties properties = nb_.buildReadOnly();

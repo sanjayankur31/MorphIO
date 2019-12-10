@@ -342,14 +342,15 @@ std::unordered_map<int, std::vector<unsigned int>> Morphology::connectivity() {
 }
 
 
-void Morphology::write(const std::string& filename) {
+void Morphology::write(const std::string& filename, bool sanitize) {
     const size_t pos = filename.find_last_of(".");
     assert(pos != std::string::npos);
 
     std::string extension;
 
     morphio::mut::Morphology clean(*this);
-    clean.sanitize();
+    if (sanitize)
+        clean.sanitize();
 
     for (const auto& root : clean.rootSections()) {
         if (root->points().size() < 2)

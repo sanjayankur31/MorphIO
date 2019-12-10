@@ -77,6 +77,7 @@ void bind_misc(py::module& m) {
         .value("soma_sphere", morphio::enums::Option::SOMA_SPHERE)
         .value("no_duplicates", morphio::enums::Option::NO_DUPLICATES)
         .value("nrn_order", morphio::enums::Option::NRN_ORDER)
+        .value("no_sanitize", morphio::enums::Option::NO_SANITIZE)
         .export_values();
 
 

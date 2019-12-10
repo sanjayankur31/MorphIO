@@ -182,8 +182,11 @@ class Morphology
 
     /**
      * Write file to H5, SWC, ASC format depending on filename extension
+     * @param filename: the output name
+     * @param sanitize: whether or not writing as a sanitized file (duplicates, only child)
+     *                  Note: the current file is never modified during the write
      **/
-    void write(const std::string& filename);
+    void write(const std::string& filename, bool sanitize = true);
 
     inline void addAnnotation(const morphio::Property::Annotation& annotation);
 

@@ -129,10 +129,11 @@ void bind_mutable_module(py::module& m) {
 
         .def(
             "write",
-            [](morphio::mut::Morphology* morph, py::object arg) { morph->write(py::str(arg)); },
+            [](morphio::mut::Morphology* morph, py::object arg, bool sanitize) { morph->write(py::str(arg), sanitize); },
             "Write file to H5, SWC, ASC format depending on filename "
             "extension",
-            "filename"_a)
+            "filename"_a,
+            "sanitize"_a=true)
 
         // Iterators
         .def(
