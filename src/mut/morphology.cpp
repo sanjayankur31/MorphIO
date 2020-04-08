@@ -209,6 +209,7 @@ void Morphology::sanitize() {
 void Morphology::sanitize(const morphio::readers::DebugInfo& debugInfo) {
     morphio::readers::ErrorMessages err(debugInfo._filename);
 
+    /*
     auto it = depth_begin();
     while (it != depth_end()) {
         std::shared_ptr<Section> section_ = *it;
@@ -254,6 +255,7 @@ void Morphology::sanitize(const morphio::readers::DebugInfo& debugInfo) {
             deleteSection(section_, false);
         }
     }
+     */
 }
 
 Property::Properties Morphology::buildReadOnly() const {
