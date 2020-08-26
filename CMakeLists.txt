@@ -8,6 +8,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 option(BUILD_BINDINGS "Build the python bindings" ON)
 option(${PROJECT_NAME}_CXX_WARNINGS "Compile C++ with warnings" ON)
 option(EXTERNAL_HIGHFIVE "Use HighFive from external source" OFF)
+option(H5_USE_BOOST "Use Boost as container for HighFive" OFF)
 
 include(${PROJECT_SOURCE_DIR}/CMake/CompilerFlags.cmake)
 set(CMAKE_CXX_FLAGS "${FLAGS}")
@@ -16,6 +17,11 @@ if (EXTERNAL_HIGHFIVE)
   find_package(HighFive REQUIRED)
 endif()
 set(MORPHIO_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/)
+
+if (H5_USE_BOOST)
+  find_package(Boost REQUIRED COMPONENTS filesystem)
+  add_definitions(-DH5_USE_BOOST) # To enable Boost inside HighFive
+endif()
 
 add_subdirectory(3rdparty)
 add_subdirectory(src)

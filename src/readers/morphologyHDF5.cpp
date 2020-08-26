@@ -24,6 +24,10 @@
 
 #include <highfive/H5Utility.hpp>  // HighFive::SilenceHDF5
 
+#ifdef H5_USE_BOOST
+#include "boost/multi_array.hpp"
+#endif
+
 namespace {
 // v1 & v2
 const std::string _d_points("points");
@@ -222,26 +226,42 @@ void MorphologyHDF5::_readPoints(int firstSectionOffset) {
     auto& somaPoints = _properties._somaLevel._points;
     auto& somaDiameters = _properties._somaLevel._diameters;
 
+#ifdef H5_USE_BOOST
+    typedef boost::multi_array<float, 2>::index index_t;
+    
+    auto loadPoints = [&](const boost::multi_array<float, 2>& hd5fData, bool hasNeurites) {
+        const auto hd5fData_size = static_cast<size_t>(hd5fData.shape()[0]);
+#else
     auto loadPoints = [&](const std::vector<std::vector<float>>& hd5fData, bool hasNeurites) {
-        const std::size_t section_offset = hasNeurites ? std::size_t(firstSectionOffset)
-                                                       : hd5fData.size();
+        const auto hd5fData_size = hd5fData.size();
+#endif
+        const auto section_offset = hasNeurites ? size_t(firstSectionOffset)
+                                                : hd5fData_size;
 
         // points and diameters are PODs. Fastest to resize then assign values
         somaPoints.resize(somaPoints.size() + section_offset);
         somaDiameters.resize(somaDiameters.size() + section_offset);
-        for (std::size_t i = 0; i < section_offset; ++i) {
+        for (size_t i = 0; i < section_offset; ++i) {
+#ifdef H5_USE_BOOST
+            const auto& p = hd5fData[static_cast<index_t>(i)];
+#else
             const auto& p = hd5fData[i];
+#endif
             somaPoints[i] = {p[0], p[1], p[2]};
             somaDiameters[i] = p[3];
         }
 
         if (hasNeurites) {
-            const size_t size = (points.size() + hd5fData.size() - section_offset);
+            const size_t size = (points.size() + hd5fData_size - section_offset);
             points.resize(size);
             diameters.resize(size);
-            for (std::size_t i = section_offset; i < hd5fData.size(); ++i) {
+            for (size_t i = section_offset; i < hd5fData_size; ++i) {
+#ifdef H5_USE_BOOST
+                const auto& p = hd5fData[static_cast<index_t>(i)];
+#else
                 const auto& p = hd5fData[i];
-                const std::size_t section_i = i - section_offset;
+#endif
+                const size_t section_i = i - section_offset;
                 points[section_i] = {p[0], p[1], p[2]};
                 diameters[section_i] = p[3];
             }
@@ -264,11 +284,19 @@ void MorphologyHDF5::_readPoints(int firstSectionOffset) {
             throw(MorphioError("'Error reading morphologies: " + _uri +
                                " bad number of dimensions in 'points' dataspace"));
         }
-        std::vector<std::vector<float>> vec(dims[0]);
+#ifdef H5_USE_BOOST
+        boost::multi_array<float, 2> vec;
+#else
+        std::vector<std::vector<float>> vec;
+#endif
         dataset.read(vec);
         loadPoints(vec, v2HasNeurites(firstSectionOffset));
     } else {
-        std::vector<std::vector<float>> vec(_pointsDims[0]);
+#ifdef H5_USE_BOOST
+        boost::multi_array<float, 2> vec;
+#else
+        std::vector<std::vector<float>> vec;
+#endif
         _points->read(vec);
         loadPoints(vec, std::size_t(firstSectionOffset) < _pointsDims[0]);
     }
@@ -283,18 +311,34 @@ int MorphologyHDF5::_readV1Sections() {
     auto& sections = _properties.get<Property::Section>();
     auto& types = _properties.get<Property::SectionType>();
 
+#ifdef H5_USE_BOOST
+    typedef boost::multi_array<int, 2>::index index_t;
+
+    boost::multi_array<int, 2> vec;
+#else
     std::vector<std::vector<int>> vec;
+#endif
     _sections->read(vec); 
 
-    if (vec.size() < 2)  // Neuron without any neurites
+#ifdef H5_USE_BOOST
+    auto vec_size = static_cast<size_t>(vec.shape()[0]);
+#else
+    auto vec_size = vec.size();
+#endif
+
+    if (vec_size < 2)  // Neuron without any neurites
         return -1;
 
     int firstSectionOffset = vec[1][0];
-    sections.reserve(sections.size() + vec.size() - 1);
-    types.reserve(vec.size() - 1);  // remove soma type
+    sections.reserve(sections.size() + vec_size - 1);
+    types.reserve(vec_size - 1);  // remove soma type
 
-    for (size_t i = 1; i < vec.size(); ++i) {
+    for (size_t i = 1; i < vec_size; ++i) {
+#ifdef H5_USE_BOOST
+        const auto& p = vec[static_cast<index_t>(i)];
+#else
         const auto& p = vec[i];
+#endif
         const auto& type = p[1];
 
         if (type > SECTION_CUSTOM_START || type < 0) {
@@ -354,15 +398,30 @@ int MorphologyHDF5::_readV2Sections() {
                            " bad number of dimensions in 'structure' dataspace"));
     }
 
+#ifdef H5_USE_BOOST
+    typedef boost::multi_array<int, 2>::index index_t;
+
+    boost::multi_array<int, 2> vec;
+#else
     std::vector<std::vector<int>> vec;
+#endif
     dataset.read(vec);
     dataset_types.read(types);
 
+#ifdef H5_USE_BOOST
+    auto vec_size = static_cast<size_t>(vec.shape()[0]);
+#else
+    auto vec_size = vec.size();
+#endif
     int firstSectionOffset = vec[1][0];
-    sections.reserve(sections.size() + vec.size() - 1);
+    sections.reserve(sections.size() + vec_size - 1);
 
-    for (size_t i = 1; i < vec.size(); ++i) {
+    for (size_t i = 1; i < vec_size; ++i) {
+#ifdef H5_USE_BOOST
+        const auto& p = vec[static_cast<index_t>(i)];
+#else
         const auto& p = vec[i];
+#endif
         const auto& type = types[i];
 
         if (type > SECTION_CUSTOM_START || type < 0) {
