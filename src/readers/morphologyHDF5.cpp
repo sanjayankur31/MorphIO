@@ -90,6 +90,8 @@ Property::Properties MorphologyHDF5::load() {
     _checkVersion(_uri);
     _selectRepairStage();
     int firstSectionOffset = _readSections();
+    std::cout << "Hello there!!" << std::endl;
+    abort();
     _readPoints(firstSectionOffset);
     _readPerimeters(firstSectionOffset);
     _readMitochondria();
@@ -287,9 +289,10 @@ int MorphologyHDF5::_readV1Sections() {
     auto& sections = _properties.get<Property::Section>();
     auto& types = _properties.get<Property::SectionType>();
 
-    boost::multi_array<int, 2> vec2;
+    typedef boost::multi_array<int, 2>::index index_t;
+    boost::multi_array<int, 2> vec2{};
     _sections->read(vec2); 
-
+    return 0;
     std::vector<std::vector<int>> vec;
     _sections->read(vec); 
 
