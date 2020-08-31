@@ -285,17 +285,17 @@ void MorphologyHDF5::_readPoints(int firstSectionOffset) {
                                " bad number of dimensions in 'points' dataspace"));
         }
 #ifdef H5_USE_BOOST
-        boost::multi_array<float, 2> vec;
+        boost::multi_array<float, 2> vec(boost::extents[static_cast<index_t>(dims[0])][static_cast<index_t>(dims[1])]);
 #else
-        std::vector<std::vector<float>> vec;
+        std::vector<std::vector<float>> vec(dims[0]);
 #endif
         dataset.read(vec);
         loadPoints(vec, v2HasNeurites(firstSectionOffset));
     } else {
 #ifdef H5_USE_BOOST
-        boost::multi_array<float, 2> vec;
+        boost::multi_array<float, 2> vec(boost::extents[static_cast<index_t>(_pointsDims[0])][static_cast<index_t>(_pointsDims[1])]);
 #else
-        std::vector<std::vector<float>> vec;
+        std::vector<std::vector<float>> vec(_pointsDims[0]);
 #endif
         _points->read(vec);
         loadPoints(vec, std::size_t(firstSectionOffset) < _pointsDims[0]);
@@ -311,12 +311,14 @@ int MorphologyHDF5::_readV1Sections() {
     auto& sections = _properties.get<Property::Section>();
     auto& types = _properties.get<Property::SectionType>();
 
+    const auto dims = _sections->getSpace().getDimensions();
+
 #ifdef H5_USE_BOOST
     typedef boost::multi_array<int, 2>::index index_t;
 
-    boost::multi_array<int, 2> vec;
+    boost::multi_array<int, 2> vec(boost::extents[static_cast<index_t>(dims[0])][static_cast<index_t>(dims[1])]);
 #else
-    std::vector<std::vector<int>> vec;
+    std::vector<std::vector<int>> vec(dims[0]);
 #endif
     _sections->read(vec); 
 
