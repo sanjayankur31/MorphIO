@@ -1,3 +1,6 @@
+#include <iostream>
+
+#include <morphio/exceptions.h>
 #include <morphio/vasc/section.h>
 
 namespace morphio {

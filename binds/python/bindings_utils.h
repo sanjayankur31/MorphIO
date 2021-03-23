@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h>
 
 #include <morphio/types.h>
+#include <morphio/vector_types.h>
 
 namespace py = pybind11;
 

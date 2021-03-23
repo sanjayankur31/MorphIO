@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iosfwd>  // std::ostream
 #include <memory>  // std::shared_ptr
 
 #include <morphio/morphology.h>

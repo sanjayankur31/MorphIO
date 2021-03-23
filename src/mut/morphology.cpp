@@ -1,5 +1,4 @@
 #include <assert.h>
-
 #include <sstream>
 #include <string>
 
@@ -13,6 +12,14 @@
 #include <morphio/tools.h>
 
 #include "../shared_utils.hpp"
+
+namespace {
+// Like std::tolower but accepts char
+char my_tolower(char ch) {
+    return static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+}
+
+}  // anonymous namespace
 
 namespace morphio {
 namespace mut {
@@ -279,7 +286,6 @@ void Morphology::_raiseIfUnifurcations() {
 }
 
 Property::Properties Morphology::buildReadOnly() const {
-    using std::setw;
     int sectionIdOnDisk = 0;
     std::map<uint32_t, int32_t> newIds;
     Property::Properties properties{};

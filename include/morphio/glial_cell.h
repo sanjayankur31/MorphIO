@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>  // std::string
+
 #include <morphio/morphology.h>
 #include <morphio/types.h>
 

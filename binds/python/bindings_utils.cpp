@@ -9,6 +9,7 @@
 #include <utility>  // std::move
 
 #include <morphio/enums.h>
+#include <morphio/exceptions.h>
 #include <morphio/types.h>
 
 namespace py = pybind11;

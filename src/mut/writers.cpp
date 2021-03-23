@@ -1,5 +1,6 @@
 #include <cassert>
 #include <fstream>
+#include <iomanip>  // std::setw, std::setprecision
 
 #include <morphio/errorMessages.h>
 #include <morphio/mut/mitochondria.h>
@@ -38,16 +39,13 @@ void writeLine(std::ofstream& myfile,
                morphio::SectionType type,
                const morphio::Point& point,
                morphio::floatType diameter) {
-    using std::setw;
-
-
-    myfile << std::to_string(id) << setw(12) << std::to_string(type) << ' ' << setw(12);
+    myfile << std::to_string(id) << std::setw(12) << std::to_string(type) << ' ' << std::setw(12);
     myfile << std::fixed
 #if !defined(MORPHIO_USE_DOUBLE)
            << std::setprecision(FLOAT_PRECISION_PRINT)
 #endif
-           << point[0] << ' ' << setw(12) << point[1] << ' ' << setw(12) << point[2] << ' '
-           << setw(12) << diameter / 2 << setw(12);
+           << point[0] << ' ' << std::setw(12) << point[1] << ' ' << std::setw(12) << point[2]
+           << ' ' << std::setw(12) << diameter / 2 << std::setw(12);
     myfile << std::to_string(parentId) << '\n';
 }
 

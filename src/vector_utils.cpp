@@ -5,6 +5,7 @@
 #include <cctype>     // std::tolower
 
 #include <morphio/types.h>
+#include <morphio/vector_types.h>
 
 namespace morphio {
 Point operator+(const Point& left, const Point& right) {
@@ -138,24 +139,12 @@ Point operator/(const Point& from, T factor) {
 template Point operator/(const Point& from, int factor);
 template Point operator/(const Point& from, floatType factor);
 
-std::ostream& operator<<(std::ostream& os, const Points& points) {
-    return os << morphio::dumpPoints(points);
-}
-
-std::ostream& operator<<(std::ostream& os, const morphio::Point& point) {
-    return os << morphio::dumpPoint(point);
-}
-
-// Like std::tolower but accepts char
-char my_tolower(char ch) {
-    return static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
-}
-
-}  // namespace morphio
-
 std::ostream& operator<<(std::ostream& os, const morphio::Points& points) {
     return os << morphio::dumpPoints(points);
 }
+
 std::ostream& operator<<(std::ostream& os, const morphio::Point& point) {
     return os << morphio::dumpPoint(point);
 }
+
+}  // namespace morphio

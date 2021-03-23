@@ -19,8 +19,14 @@
  **/
 #pragma once
 
+#include <stdint.h>  // uint32_t
+
+#include <array>
 #include <map>
+#include <vector>
+
 #include <morphio/types.h>
+#include <morphio/vector_types.h>
 
 namespace morphio {
 namespace Property {
@@ -154,7 +160,6 @@ struct CellLevel {
     CellLevel()
         : _version({"undefined", 0, 0}) {}
 
-    // A tuple (file format (std::string), major version, minor version)
     MorphologyVersion _version;
     morphio::CellFamily _cellFamily;
     SomaType _somaType;

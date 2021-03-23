@@ -1,5 +1,6 @@
 #pragma once
-#include <iosfwd>
+
+#include <iosfwd>  // std::ostream
 
 namespace morphio {
 namespace enums {
@@ -49,6 +50,7 @@ enum SomaType {
     SOMA_CYLINDERS,
     SOMA_SIMPLE_CONTOUR
 };
+
 std::ostream& operator<<(std::ostream& os, SomaType v);
 
 /** Classification of neuron substructures. */

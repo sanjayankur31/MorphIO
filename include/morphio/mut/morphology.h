@@ -1,13 +1,9 @@
 #pragma once
 
-#include <cstdint>
-#include <iomanip>
-#include <iostream>
+#include <map>
 #include <memory>
-#include <ostream>
 #include <unordered_map>
-
-#include <functional>
+#include <vector>
 
 #include <morphio/errorMessages.h>
 #include <morphio/exceptions.h>
@@ -15,7 +11,6 @@
 #include <morphio/mut/mitochondria.h>
 #include <morphio/mut/soma.h>
 #include <morphio/properties.h>
-#include <morphio/section.h>
 #include <morphio/types.h>
 
 namespace morphio {
@@ -58,61 +53,83 @@ class Morphology
     /**
        Returns all section ids at the tree root
     **/
-    inline const std::vector<std::shared_ptr<Section>>& rootSections() const noexcept;
+    const std::vector<std::shared_ptr<Section>>& rootSections() const noexcept {
+        return _rootSections;
+    }
 
     /**
        Returns the dictionary id -> Section for this tree
     **/
-    inline const std::map<uint32_t, std::shared_ptr<Section>>& sections() const noexcept;
+    const std::map<uint32_t, std::shared_ptr<Section>>& sections() const noexcept {
+        return _sections;
+    }
 
     /**
        Returns a shared pointer on the Soma
 
        Note: multiple morphologies can share the same Soma instance
     **/
-    inline std::shared_ptr<Soma>& soma() noexcept;
+    std::shared_ptr<Soma>& soma() noexcept {
+        return _soma;
+    }
 
     /**
        Returns a shared pointer on the Soma
 
        Note: multiple morphologies can share the same Soma instance
     **/
-    inline const std::shared_ptr<Soma>& soma() const noexcept;
+    const std::shared_ptr<Soma>& soma() const noexcept {
+        return _soma;
+    }
 
     /**
      * Return the mitochondria container class
      **/
-    inline Mitochondria& mitochondria() noexcept;
+    Mitochondria& mitochondria() noexcept {
+        return _mitochondria;
+    }
     /**
      * Return the mitochondria container class
      **/
-    inline const Mitochondria& mitochondria() const noexcept;
+    const Mitochondria& mitochondria() const noexcept {
+        return _mitochondria;
+    }
 
     /**
      * Return the endoplasmic reticulum container class
      **/
-    inline EndoplasmicReticulum& endoplasmicReticulum() noexcept;
+    EndoplasmicReticulum& endoplasmicReticulum() noexcept {
+        return _endoplasmicReticulum;
+    }
     /**
      * Return the endoplasmic reticulum container class
      **/
-    inline const EndoplasmicReticulum& endoplasmicReticulum() const noexcept;
+    const EndoplasmicReticulum& endoplasmicReticulum() const noexcept {
+        return _endoplasmicReticulum;
+    }
 
     /**
      * Return the annotation object
      **/
-    inline const std::vector<Property::Annotation>& annotations() const noexcept;
+    const std::vector<Property::Annotation>& annotations() const noexcept {
+        return _cellProperties->_annotations;
+    }
 
     /**
      * Return the markers from the ASC file
      **/
-    inline const std::vector<Property::Marker>& markers() const noexcept;
+    const std::vector<Property::Marker>& markers() const noexcept {
+        return _cellProperties->_markers;
+    }
 
     /**
        Get the shared pointer for the given section
 
        Note: multiple morphologies can share the same Section instances.
     **/
-    inline const std::shared_ptr<Section>& section(uint32_t id) const;
+    const std::shared_ptr<Section>& section(uint32_t id) const {
+        return _sections.at(id);
+    }
 
     /**
        Depth first iterator starting at a given section id
@@ -173,25 +190,36 @@ class Morphology
     /**
      * Return the soma type
      **/
-    inline SomaType somaType() const noexcept;
+    SomaType somaType() const noexcept {
+        return _soma->type();
+    }
 
     /**
      * Return the cell family (neuron or glia)
      **/
-    inline CellFamily cellFamily() const noexcept;
+    CellFamily cellFamily() const noexcept {
+        return _cellProperties->_cellFamily;
+    }
 
     /**
      * Return the version
      **/
-    inline MorphologyVersion version() const noexcept;
+    MorphologyVersion version() const noexcept {
+        return _cellProperties->_version;
+    }
 
     /**
      * Write file to H5, SWC, ASC format depending on filename extension
      **/
     void write(const std::string& filename);
 
-    inline void addAnnotation(const morphio::Property::Annotation& annotation);
-    inline void addMarker(const morphio::Property::Marker& marker);
+    void addAnnotation(const morphio::Property::Annotation& annotation) {
+        _cellProperties->_annotations.push_back(annotation);
+    }
+
+    void addMarker(const morphio::Property::Marker& marker) {
+        _cellProperties->_markers.push_back(marker);
+    }
 
     /**
        Return the data structure used to create read-only morphologies
@@ -204,7 +232,6 @@ class Morphology
      * Note: -1 is the soma node
      **/
     std::unordered_map<int, std::vector<unsigned int>> connectivity();
-
 
     /**
        Fixes the morphology single child sections and issues warnings
@@ -243,70 +270,6 @@ class Morphology
     void eraseByValue(std::vector<std::shared_ptr<Section>>& vec,
                       const std::shared_ptr<Section> section);
 };
-
-inline const std::vector<std::shared_ptr<Section>>& Morphology::rootSections() const noexcept {
-    return _rootSections;
-}
-
-inline const std::map<uint32_t, std::shared_ptr<Section>>& Morphology::sections() const noexcept {
-    return _sections;
-}
-
-inline std::shared_ptr<Soma>& Morphology::soma() noexcept {
-    return _soma;
-}
-
-inline const std::shared_ptr<Soma>& Morphology::soma() const noexcept {
-    return _soma;
-}
-
-inline Mitochondria& Morphology::mitochondria() noexcept {
-    return _mitochondria;
-}
-
-inline const Mitochondria& Morphology::mitochondria() const noexcept {
-    return _mitochondria;
-}
-
-inline EndoplasmicReticulum& Morphology::endoplasmicReticulum() noexcept {
-    return _endoplasmicReticulum;
-}
-
-inline const EndoplasmicReticulum& Morphology::endoplasmicReticulum() const noexcept {
-    return _endoplasmicReticulum;
-}
-
-inline const std::shared_ptr<Section>& Morphology::section(uint32_t id) const {
-    return _sections.at(id);
-}
-
-inline SomaType Morphology::somaType() const noexcept {
-    return _soma->type();
-}
-
-inline const std::vector<Property::Annotation>& Morphology::annotations() const noexcept {
-    return _cellProperties->_annotations;
-}
-
-inline const std::vector<Property::Marker>& Morphology::markers() const noexcept {
-    return _cellProperties->_markers;
-}
-
-inline CellFamily Morphology::cellFamily() const noexcept {
-    return _cellProperties->_cellFamily;
-}
-
-inline MorphologyVersion Morphology::version() const noexcept {
-    return _cellProperties->_version;
-}
-
-inline void Morphology::addAnnotation(const morphio::Property::Annotation& annotation) {
-    _cellProperties->_annotations.push_back(annotation);
-}
-
-inline void Morphology::addMarker(const morphio::Property::Marker& marker) {
-    _cellProperties->_markers.push_back(marker);
-}
 
 }  // namespace mut
 }  // namespace morphio

@@ -23,7 +23,6 @@ class Morphology
   public:
     virtual ~Morphology();
 
-    Morphology& operator=(const Morphology&);
     Morphology(Morphology&&) noexcept;
     Morphology& operator=(Morphology&&) noexcept;
 
@@ -49,7 +48,7 @@ class Morphology
     /**
      * Return the mitochondria object
      **/
-    Mitochondria mitochondria() const;
+    const Mitochondria mitochondria() const;
 
     /**
      * Return the endoplasmic reticulum object

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>    // std::shared_ptr
+#include <stdint.h>  // uint32_t
+
 #include <morphio/mitochondria.h>
 #include <morphio/properties.h>
 #include <morphio/section_base.h>

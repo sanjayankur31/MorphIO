@@ -5,6 +5,8 @@
 #include <morphio/mut/section.h>
 #include <morphio/tools.h>
 
+#include "../shared_utils.hpp"
+
 namespace morphio {
 namespace mut {
 using morphio::readers::ErrorMessages;
@@ -100,13 +102,15 @@ upstream_iterator Section::upstream_end() const {
     return upstream_iterator();
 }
 
-static std::ostream& operator<<(std::ostream& os, const Section& section) {
-    ::operator<<(os, section);
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, const morphio::mut::Section& section) {
+    const auto points = section.points();
+    if (points.empty()) {
+        os << "Section(id=" << section.id() << ", points=[])";
+    } else {
+        os << "Section(id=" << section.id() << ", points=[(" << valueToString(points[0])
+           << "),..., (" << valueToString(points[points.size() - 1]) << ")])";
+    }
 
-std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Section>& sectionPtr) {
-    os << *sectionPtr;
     return os;
 }
 
@@ -214,14 +218,3 @@ std::shared_ptr<Section> Section::appendSection(const Property::PointLevel& poin
 }  // end namespace mut
 }  // end namespace morphio
 
-std::ostream& operator<<(std::ostream& os, const morphio::mut::Section& section) {
-    auto points = section.points();
-    if (points.empty()) {
-        os << "Section(id=" << section.id() << ", points=[])";
-    } else {
-        os << "Section(id=" << section.id() << ", points=[(" << points[0] << "),..., (";
-        os << points[points.size() - 1] << ")])";
-    }
-
-    return os;
-}

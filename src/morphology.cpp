@@ -58,7 +58,7 @@ Soma Morphology::soma() const {
     return Soma(_properties);
 }
 
-Mitochondria Morphology::mitochondria() const {
+const Mitochondria Morphology::mitochondria() const {
     return Mitochondria(_properties);
 }
 

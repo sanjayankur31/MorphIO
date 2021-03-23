@@ -106,7 +106,6 @@ class Section: public std::enable_shared_from_this<Section>
     Section(Morphology*, unsigned int id, const morphio::Section& section);
     Section(Morphology*, unsigned int id, const Section&);
 
-
     /**
       If section is an orphan, in other words it does not belong to an a morphology
     **/
@@ -123,7 +122,7 @@ class Section: public std::enable_shared_from_this<Section>
     SectionType _sectionType;
 };
 
-std::ostream& operator<<(std::ostream&, const std::shared_ptr<Section>&);
+std::ostream& operator<<(std::ostream&, const morphio::mut::Section&);
 
 inline uint32_t Section::id() const noexcept {
     return _id;
@@ -172,4 +171,3 @@ inline const Property::PointLevel& Section::properties() const noexcept {
 }  // namespace mut
 }  // namespace morphio
 
-std::ostream& operator<<(std::ostream&, const morphio::mut::Section&);

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <memory>    // std::shared_ptr
+#include <stdint.h>  // uint32_t
+#include <utility>   // std::move
+#include <vector>    // std::vector
+
 #include <morphio/types.h>
 
 namespace morphio {
