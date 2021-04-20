@@ -24,7 +24,6 @@ else()
 endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake)
-include(CompilerFlags)
 set(CMAKE_CXX_FLAGS "${FLAGS}")
 
 if (EXTERNAL_HIGHFIVE)
