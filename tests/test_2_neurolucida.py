@@ -178,10 +178,10 @@ def test_single_neurite_no_soma(tmp_path):
         assert len(n.root_sections) == 1
         assert_array_equal(n.root_sections[0].points,
                            np.array([[1.2, 2.7, 1.0],
-                                     [1.2, 3.7, 2.0]], dtype=np.float32))
+                                     [1.2, 3.7, 2.0]]))
 
         assert_array_equal(n.root_sections[0].diameters,
-                           np.array([13., 13.], dtype=np.float32))
+                           np.array([13., 13.]))
 
 
 def test_skip_header(tmp_path):
@@ -205,7 +205,7 @@ def test_skip_header(tmp_path):
         assert len(n.root_sections) == 1
         assert_array_equal(n.root_sections[0].points,
                            np.array([[1.2, 2.7, 1.0],
-                                     [1.2, 3.7, 2.0]], dtype=np.float32))
+                                     [1.2, 3.7, 2.0]]))
 
 
 without_duplicate = '''
@@ -265,14 +265,14 @@ would look like'''
                             [0, -10, 0],
                             [-3, -10, 0]])
         assert_array_equal(n.root_sections[0].children[0].diameters,
-                           np.array([2, 2, 0.3], dtype=np.float32))
+                           np.array([2, 2, 0.3]))
 
         assert_array_equal(n.root_sections[0].children[1].points,
                            [[3, -10, 0],
                             [6, -10, 0],
                             [9, -10, 0]])
         assert_array_equal(n.root_sections[0].children[1].diameters,
-                           np.array([2, 2, 0.3], dtype=np.float32))
+                           np.array([2, 2, 0.3]))
 
 
 def test_read_without_duplicates(tmp_path):
@@ -317,7 +317,7 @@ def test_explicit_duplicates_with_arbitrary_diameter(tmp_path):
                       ''') as tmp_file:
         n = Morphology(tmp_file.name)
         assert_array_equal(n.root_sections[0].children[0].diameters,
-                           np.array([20, 2, 0.3], dtype=np.float32))
+                           np.array([20, 2, 0.3]))
 
 
 def test_unfinished_file(tmp_path):
@@ -363,14 +363,14 @@ def test_section_single_point(tmp_path):
         assert len(n.root_sections[0].children) == 2
         assert_array_equal(n.root_sections[0].children[0].points,
                            np.array([[3, -10, 0],
-                                     [3, -10, 2]], dtype=np.float32))
+                                     [3, -10, 2]]))
         assert_array_equal(n.root_sections[0].children[0].diameters,
-                           np.array([4, 4], dtype=np.float32))
+                           np.array([4, 4]))
 
         assert_array_equal(n.root_sections[0].children[1].points,
                            np.array([[3, -10, 0],
                                      [3, -10, 1],
-                                     [3, -10, 2]], dtype=np.float32))
+                                     [3, -10, 2]]))
 
 
 def test_single_children(tmp_path):
@@ -408,8 +408,8 @@ def test_single_children(tmp_path):
                            np.array([[3, -4, 0],
                                      [3, -6, 0],
                                      [3, -8, 0],
-                                     [3, -10, 0]],
-                                    dtype=np.float32))
+                                     [3, -10, 0]]
+                                    ))
         assert len(n.root_sections[0].children) == 1
 
 
@@ -423,7 +423,7 @@ def test_spine():
                                  [9.99,    -4.00,   150.00],
                                  [11.38,    -4.62,   150.00],
                                  [12.55,    -5.16,   150.00],
-                                 [13.75,    -5.96,   150.00]], dtype=np.float32))
+                                 [13.75,    -5.96,   150.00]]))
 
 
 def test_single_point_section_duplicate_parent(tmp_path):
@@ -441,7 +441,7 @@ def test_single_point_section_duplicate_parent(tmp_path):
         neuron = Morphology(tmp_file.name)
         assert_array_equal(neuron.root_sections[0].points, [[  3.,  -4.,   0.],
                                                             [  3., -10.,   0.]])
-        assert_array_equal(neuron.root_sections[0].diameters, np.array([2, 2], dtype=np.float32))
+        assert_array_equal(neuron.root_sections[0].diameters, np.array([2, 2]))
 
 
 def test_single_point_section_duplicate_parent_complex(tmp_path):
@@ -488,7 +488,7 @@ def test_spine():
                                  [9.99,    -4.00,   150.00],
                                  [11.38,    -4.62,   150.00],
                                  [12.55,    -5.16,   150.00],
-                                 [13.75,    -5.96,   150.00]], dtype=np.float32))
+                                 [13.75,    -5.96,   150.00]]))
 
 
 def test_markers():
@@ -499,26 +499,26 @@ def test_markers():
     assert len(n.markers) == 5
     assert_array_equal(n.markers[0].points,
                        np.array([[-271.87, -121.14, -16.27],
-                                 [-269.34, -122.29, -15.48]],
-                                dtype=np.float32))
+                                 [-269.34, -122.29, -15.48]]
+                                ))
     assert_array_equal(n.markers[0].diameters,
-                       np.array([0.69, 0.69], dtype=np.float32))
+                       np.array([0.69, 0.69]))
     assert n.markers[0].label == 'Cross'
 
     assert_array_equal(n.markers[1].points,
                        np.array([[-279.41, -119.99, -18.00],
-                                 [-272.98, -126.60, -21.22]],
-                                dtype=np.float32))
+                                 [-272.98, -126.60, -21.22]]
+                                ))
     assert_array_equal(n.markers[1].diameters,
-                       np.array([0.46, 0.92], dtype=np.float32))
+                       np.array([0.46, 0.92]))
     assert n.markers[1].label == 'Cross'
 
     assert_array_equal(n.markers[2].points,
                        np.array([[-223.67, -157.92, -42.45],
-                                 [-222.76, -154.18, -39.90]],
-                                dtype=np.float32))
+                                 [-222.76, -154.18, -39.90]]
+                                ))
     assert_array_equal(n.markers[2].diameters,
-                       np.array([0.69, 0.69], dtype=np.float32))
+                       np.array([0.69, 0.69]))
     assert n.markers[2].label == 'Cross'
     assert n.markers[3].label == 'INCOMPLETE'
     assert n.markers[3].section_id == 3
@@ -531,33 +531,33 @@ def test_markers():
     assert_array_equal(n.root_sections[0].points,
                        np.array([[-290.87,  -113.09,   -16.32],
                                  [-290.87,  -113.09,   -16.32],
-                                 ],
-                                dtype=np.float32))
+                                 ]
+                                ))
 
     assert_array_equal(n.root_sections[0].children[0].points,
                        np.array([[-290.87,  -113.09,   -16.32],
                                  [-277.14,  -119.13,   -18.02],
-                                 [-275.54,  -119.99,   -16.67]],
-                                dtype=np.float32))
+                                 [-275.54,  -119.99,   -16.67]]
+                                ))
 
     assert_array_equal(n.root_sections[0].children[1].points,
                        np.array([[-290.87,  -113.09,   -16.32],
                                  [-277.80,  -120.28,   -19.48],
-                                 [-276.65,  -121.14,   -20.20]],
-                                dtype=np.float32))
+                                 [-276.65,  -121.14,   -20.20]]
+                                ))
 
     assert_array_equal(n.root_sections[0].children[1].children[0].points,
                        np.array([[-276.65,  -121.14,   -20.20],
                                  [-267.94,  -128.61,   -22.57],
-                                 [-204.90,  -157.63,   -42.45]],
-                                dtype=np.float32))
+                                 [-204.90,  -157.63,   -42.45]]
+                                ))
 
     assert_array_equal(n.root_sections[0].children[1].children[1].points,
                        np.array([[-276.65,  -121.14,   -20.20],
                                  [-269.77,  -129.47,   -22.57],
                                  [-268.17,  -130.62,   -24.75],
-                                 [-266.79,  -131.77,   -26.13]],
-                                dtype=np.float32))
+                                 [-266.79,  -131.77,   -26.13]]
+                                ))
 
 
 def test_string_markers():
@@ -570,7 +570,7 @@ def test_string_markers():
                            np.array([[-2.87, -9.24, -5.06],
                                      [-2.76, -10.41, -5.13],
                                      [-2.03, -12.48, -5.13],
-                                     [-1.62, -13.30, -5.56]], dtype=np.float32))
+                                     [-1.62, -13.30, -5.56]]))
 
         assert len(m.markers) == 2
         pia = m.markers[0]
@@ -585,8 +585,8 @@ def test_string_markers():
         assert m.markers[1].label == 'layer1-2'
         assert_array_equal(m.markers[1].points,
                            np.array([[983.07, 455.36, -0.19],
-                                     [1192.31, 420.35, -0.19]], dtype=np.float32))
-        assert_array_equal(m.markers[1].diameters, np.array([0.15, 0.15], dtype=np.float32))
+                                     [1192.31, 420.35, -0.19]]))
+        assert_array_equal(m.markers[1].diameters, np.array([0.15, 0.15]))
 
 def test_neurolucida_markers(tmp_path):
     SIMPLE = Morphology(DATA_DIR / 'simple.asc')
@@ -639,14 +639,14 @@ f'''
             assert_array_equal(neuron.points, SIMPLE.points)
             assert len(neuron.markers) == 2
             assert_array_almost_equal(neuron.markers[0].points,
-                                      np.array([[81.58, -77.98, -20.32]], dtype=np.float32))
+                                      np.array([[81.58, -77.98, -20.32]]))
             assert_array_almost_equal(neuron.markers[0].diameters,
-                                      np.array([0.5], dtype=np.float32))
+                                      np.array([0.5]))
             assert_array_almost_equal(neuron.markers[1].points,
-                                      np.array([[51.580002, -77.779999, -24.32]],
-                                               dtype=np.float32))
+                                      np.array([[51.580002, -77.779999, -24.32]]
+                                               ))
             assert_array_almost_equal(neuron.markers[1].diameters,
-                                      np.array([0.52], dtype=np.float32))
+                                      np.array([0.52]))
 
 
 def test_invalid_incomplete():
@@ -669,7 +669,7 @@ def test_Sections_block():
 
 def test_marker_with_string():
     m = Morphology(DATA_DIR / 'marker-with-string.asc')
-    assert_array_equal(m.markers[0].points, np.array([[  -0.97    , -141.169998,   84.769997]],
-                                                     dtype=np.float32))
+    assert_array_equal(m.markers[0].points, np.array([[  -0.97    , -141.169998,   84.769997]]
+                                                     ))
 def test_version():
     assert_array_equal(Morphology(DATA_DIR / 'simple.asc').version, ('asc', 1, 0))

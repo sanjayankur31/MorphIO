@@ -419,8 +419,8 @@ def test_read_duplicate(tmp_path):
                                                 [1, 0, 0],
                                                 [1, 1, 0]]))
     assert_array_equal(child1.diameters, np.array([1, 1]))
-    assert_array_equal(child2.diameters, np.array([4.6, 7], dtype=np.float32))
-    assert_array_equal(child3.diameters, np.array([1, 4.6, 7], dtype=np.float32))
+    assert_array_equal(child2.diameters, np.array([4.6, 7]))
+    assert_array_equal(child3.diameters, np.array([1, 4.6, 7]))
 
 
 def test_unsupported_section_type(tmp_path):
